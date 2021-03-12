@@ -22,16 +22,12 @@ last_summary_emitted = 0
 endpoint_definitions = None
 alert_definitions = None
 metrics_definitions = None
-db = None
 
 
 def main():
     logger.info("starting...")
 
     setup_signal_handling()
-
-    global db
-    db = settings.get_database()
 
     # get terraform version from state found with s3 bucket/key
     terraform_version = get_terraform_version(settings.TERRAFORM_S3_BUCKET, settings.TERRAFORM_S3_KEY)

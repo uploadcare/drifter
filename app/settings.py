@@ -2,8 +2,6 @@ import os
 import database
 import re
 import distutils.util
-from database.sqlite_database import SqliteDatabase
-from database.postgresql_database import PostgreSqlDatabase
 
 DEBUG = bool(distutils.util.strtobool(os.getenv("DEBUG", "True")))
 DB_TYPE = os.getenv("DB_TYPE")
