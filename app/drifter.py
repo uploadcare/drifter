@@ -111,6 +111,9 @@ def install_terraform(version):
     out_path = f"{settings.TMP_FOLDER}/{filename}"
     bin = f"{out_path}/terraform"
 
+    if os.path.exists(bin):
+        return bin
+
     logger.debug(f"downloading Terraform from {url}")
     download_file(url=url, filename=zip)
 
