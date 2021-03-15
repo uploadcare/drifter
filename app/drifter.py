@@ -29,15 +29,18 @@ def main():
 
     setup_signal_handling()
 
+    repo_folder = settings.TERRAFORM_LOCAL_PATH
+
     # get terraform version from state found with s3 bucket/key
-    terraform_version = get_terraform_version(settings.TERRAFORM_S3_BUCKET, settings.TERRAFORM_S3_KEY)
+    # terraform_version = get_terraform_version(settings.TERRAFORM_S3_BUCKET, settings.TERRAFORM_S3_KEY)
+    terraform_version = get_local_terraform_version(repo_folder)
 
     # install appropriate terraform version
     terraform_bin = install_terraform(terraform_version)
 
     # get current head of terraform repository
     # fetch that version as an archive and unzip it
-    repo_folder = fetch_current_repo_head()
+    # repo_folder = fetch_current_repo_head()
 
     # terraform init (with parameters)
     if not terraform_initialise(terraform_bin, repo_folder):
@@ -95,6 +98,19 @@ def get_terraform_version(bucket, key):
     logger.info(f"getting Terraform version from remote state at s3://{bucket}/{key}")
 
     remote_state = json.loads(get_file_or_s3(f"s3://{bucket}/{key}"))
+
+    version = remote_state["terraform_version"]
+    logger.debug(f"terraform version = {version}")
+
+    return version
+
+
+def get_local_terraform_version(path):
+    if settings.TERRAFORM_GITHUB_FOLDER:
+        path = os.path.join(path, settings.TERRAFORM_GITHUB_FOLDER)
+
+    with open(os.path.join(path, 'terraform.tfstate')) as fp:
+        remote_state = json.load(fp)
 
     version = remote_state["terraform_version"]
     logger.debug(f"terraform version = {version}")

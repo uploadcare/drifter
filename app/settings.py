@@ -17,6 +17,9 @@ SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL")
 TMP_FOLDER = os.getenv("TMP_FOLDER", default="/tmp")
 
 
+TERRAFORM_LOCAL_PATH = os.getenv("TERRAFORM_LOCAL_PATH")
+
+
 def get_database():
   if DB_TYPE == "postgresql":
     return get_database_postgresql()
