@@ -11,7 +11,7 @@ import time
 import requests
 import signal
 import os
-import boto3
+# import boto3
 import uuid
 import subprocess
 import settings
