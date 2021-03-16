@@ -24,6 +24,8 @@ alert_definitions = None
 metrics_definitions = None
 
 
+import sys
+
 def main():
     logger.info("starting...")
 
@@ -44,12 +46,12 @@ def main():
 
     # terraform init (with parameters)
     if not terraform_initialise(terraform_bin, repo_folder):
-        return
+        sys.exit(1)
 
     # terraform plan (with parameters)
     metrics = terraform_plan(terraform_bin, repo_folder)
     if metrics is None:
-        return
+        sys.exit(1)
 
     # ship metrics
     ship_metrics_to_console(metrics)
@@ -59,6 +61,8 @@ def main():
 
     if settings.SLACK_WEBHOOK_URL and deduplicate_alert(metrics):
         alert_slack(pretty_print_metrics(metrics))
+
+    sys.exit(metrics['terraform_status'])
 
 
 def signal_handler(signum, frame):
