@@ -56,6 +56,8 @@ def main():
     # ship metrics
     ship_metrics_to_console(metrics)
 
+    report_to_teamcity(metrics)
+
     if settings.CLOUDWATCH_NAMESPACE:
         ship_metrics_to_cloudwatch(metrics)
 
@@ -428,6 +430,22 @@ def pretty_print_metrics(metrics):
     timing_message = f"Plan took {time_taken_human_readable}."
 
     return f"{changes_message}\n{resources_message}\n{timing_message}"
+
+
+TEAMCITY_METRICS = [
+    ('drift_total', 'pending_total'),
+    ('drift_add', 'pending_add'),
+    ('drift_change', 'pending_change'),
+    ('drift_destroy', 'pending_destroy'),
+    ('resource_count', 'resource_count'),
+]
+
+def report_to_teamcity(metrics):
+    if metrics["terraform_status"] == 2:
+        sys.stdout.write("##teamcity[buildProblem description='Drift detected']\n")
+
+    for tc_key, m_key in TEAMCITY_METRICS:
+        sys.stdout.write("##teamcity[buildStatisticValue key='{}' value='{}']\n".format(tc_key, metrics[m_key]))
 
 
 if __name__ == "__main__":
