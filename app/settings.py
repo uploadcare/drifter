@@ -1,5 +1,4 @@
 import os
-import database
 import re
 import distutils.util
 
