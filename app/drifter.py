@@ -216,7 +216,7 @@ def terraform_initialise(terraform_bin, repo_folder):
         logger.info(f"using candidate repo folder {candidate_folder}")
 
     child = subprocess.Popen(
-        f"{terraform_bin} init -input=false -lockfile=readonly -no-color",
+        f"{terraform_bin} init -input=false -no-color",
         cwd=candidate_folder,
         shell=True,
         stdout=subprocess.PIPE,
